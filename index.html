@@ -1,0 +1,126 @@
+<!DOCTYPE html>
+<!--
+	NOTES:
+	1. All tokens are represented by '$' sign in the template.
+	2. You can write your code only wherever mentioned.
+	3. All occurrences of existing tokens will be replaced by their appropriate values.
+	4. Blank lines will be removed automatically.
+	5. Remove unnecessary comments before creating your template.
+-->
+<html>
+<head>
+<meta charset="UTF-8">
+<meta name="authoring-tool" content="Adobe_Animate_CC">
+<title>Honest</title>
+<!-- write your code here -->
+<script src="https://code.createjs.com/1.0.0/createjs.min.js"></script>
+<script src="honest_timescale.js"></script>
+<script>
+// Global Scripts
+	var times_b = ["1993 - 2018", 
+"2018 - 2021", 
+"2 - 3 months ago", 
+"last month", 
+"last week", 
+"this week", 
+"today"];
+var tmln01_dates = ['1993', '2001', '2008', '2009', '2012', '2016-2017', '2018'];
+var tmln01_evnts = ["watched Jurassic Park, decided to become a paleontologist", 
+"read a lot of Stephen Jay Gould essays and was introduced to ideas about vast lengths of time", 
+"became a spatial scientist and became really good at making maps \n\n... timelines, not so much", 
+"played a lot of Call of Duty: Black Ops", 
+"got into classic fantasy literature including Robert E Howard", 
+"played a lot of Call of Duty: Black Ops (again)", 
+"got into Billy Joel"];
+var tmln02_dates = ["2018", "2019", "2019", "2020-2021", "2021"];
+var tmln02_evnts = ["started taking courses at LSC", 
+"took IMED 1345", 
+"saw 'Scale of the Universe' visualization at Perot", 
+"worked with US Army Corps of Engineers designing websites, interactive stories, dashboards, and web maps", 
+"spent a few months in Phoenix, \ngot involved with Arizona Master Naturalists and learned about phenology, \nvisited Heard and saw the Hopi Calendar"];
+var tmln03_dates = ["three months ago", "two months ago", "two months ago"];
+var tmln03_evnts = ["started listening to Conan audiobook, especially paragraph in forward about cyclical ages of civilizations", 
+"started DATN 1370 course, \nwas shocked by both other student's lack of design mentality and the constructive criticism I provided, started wondering what sets me apart, did I have exceptionally good professors during undergrad and grad school?", 
+"started a deep dive into my own history regarding design, quantitative thinking, and the scientific method"];
+var tmln04_dates = ["last month", "last month", "last month"];
+var tmln04_evnts = ["visited the Ramses II exhibit at HMNS, decided there was a need to better communicate long periods of time \n\n... by the time Ramses II was Pharaoh, the pyramids were already old", 
+"completed the Design Thinking Process assignment, based on Herbert A Simon's work", 
+"listened to an audiobook of Karl Popper's 'The Myth of the Framework' for insight into my criticism approach"];
+var tmln05_dates = ["last week", "last week", "last week", "last week", "last week", "last week", "last week"];
+var tmln05_evnts = ["peeked forward into this week's assignment", 
+"thought a lot about time", 
+"thought about time viewed as a cycle: \n\u2022 Robert E Howard \n\u2022 Robert Jordan \n\u2022 the Hopi Calendar", 
+"thought about how scared people were in the years after WWI, between ethnic nationalism and relativity, and how that influenced contemporary writers: Howard and Tolkien writing about different 'races' and Lovecraft contemplating the uncontemplatable scale of the universe", 
+"ideated themes for a timeline: \n\u2022 History of wars in Europe \n\u2022 History of Europe starting with Bronze Age \n\u2022 History of universe (challenge of very large times - age of the universe - and very small times - Planck unit)", 
+"downloaded the 'Scale of the Universe 2' app", 
+"built a prototype animation with a bunch of scale tweens and camera zooms to emphasize differences in temporal scale"];
+var tmln06_evnts = [
+"\u2022 Refactored code for more flexibility " +
+"\n\n\u2022 Built functional mock-up with no content or styling, but with all functionality " +
+"\n\n\u2022 Want to see what technically is possible and overcome any tech hurdles early" +
+"\n\n\u2022 Fleshed out content " +
+"\n\n\u2022 Added content to animation " + 
+"\n\n\u2022 Began researching styling, drew on only concept of the 50s I had (Nuketown) " +
+"\n\n\u2022 Google searches for palettes, fonts " +
+"\n\n\u2022 Applied styling ", 
+"\u2022 Showed to Discord channel " +
+"\n\n\u2022 Decided I wanted an intro frame to set theme " +
+"\n\n\u2022 Dug out Earth Day assignment from IMED 1345 " +
+"\n\n\u2022 Decided to bookend with closing frame to double down on Billy Joel references " +
+"\n\n\u2022 Pushed to GitHub for testing" +
+"\n\n\u2022 Checked against project specifications" +
+"\n\n\u2022 Called project complete with no further revision" +
+"\n\n\u2022 Packaged for delivery"
+];</script>
+<script>
+var canvas, stage, exportRoot, anim_container, dom_overlay_container, fnStartAnimation;
+function init() {
+	canvas = document.getElementById("canvas");
+	anim_container = document.getElementById("animation_container");
+	dom_overlay_container = document.getElementById("dom_overlay_container");
+	var comp=AdobeAn.getComposition("30F0207057611743A282BC4ED89EB99F");
+	var lib=comp.getLibrary();
+	var loader = new createjs.LoadQueue(false);
+	loader.addEventListener("fileload", function(evt){handleFileLoad(evt,comp)});
+	loader.addEventListener("complete", function(evt){handleComplete(evt,comp)});
+	var lib=comp.getLibrary();
+	loader.loadManifest(lib.properties.manifest);
+}
+function handleFileLoad(evt, comp) {
+	var images=comp.getImages();	
+	if (evt && (evt.item.type == "image")) { images[evt.item.id] = evt.result; }	
+}
+function handleComplete(evt,comp) {
+	//This function is always called, irrespective of the content. You can use the variable "stage" after it is created in token create_stage.
+	var lib=comp.getLibrary();
+	var ss=comp.getSpriteSheet();
+	var queue = evt.target;
+	var ssMetadata = lib.ssMetadata;
+	for(i=0; i<ssMetadata.length; i++) {
+		ss[ssMetadata[i].name] = new createjs.SpriteSheet( {"images": [queue.getResult(ssMetadata[i].name)], "frames": ssMetadata[i].frames} )
+	}
+	exportRoot = new lib.timescale06();
+	stage = new lib.Stage(canvas);
+	stage.enableMouseOver();	
+	//Registers the "tick" event listener.
+	fnStartAnimation = function() {
+		stage.addChild(exportRoot);
+		createjs.Ticker.framerate = lib.properties.fps;
+		createjs.Ticker.addEventListener("tick", stage);
+	}	    
+	//Code to support hidpi screens and responsive scaling.
+	AdobeAn.makeResponsive(false,'both',false,1,[canvas,anim_container,dom_overlay_container]);	
+	AdobeAn.compositionLoaded(lib.properties.id);
+	fnStartAnimation();
+}
+</script>
+<!-- write your code here -->
+</head>
+<body onload="init();" style="margin:0px;">
+	<div id="animation_container" style="background-color:rgba(255, 255, 255, 1.00); width:960px; height:720px">
+		<canvas id="canvas" width="960" height="720" style="position: absolute; display: block; background-color:rgba(255, 255, 255, 1.00);"></canvas>
+		<div id="dom_overlay_container" style="pointer-events:none; overflow:hidden; width:960px; height:720px; position: absolute; left: 0px; top: 0px; display: block;">
+		</div>
+	</div>
+</body>
+</html>
